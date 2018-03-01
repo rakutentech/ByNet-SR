@@ -25,7 +25,7 @@ parser.add_argument("--weight-decay", "--wd", default=1e-4, type=float, help="we
 
 def main():
 
-    global opt, model 
+    global opt, model
     opt = parser.parse_args()
     print(opt)
 
@@ -40,7 +40,7 @@ def main():
         torch.cuda.manual_seed(opt.seed)
 
     cudnn.benchmark = True
-        
+
     print("===> Loading datasets")
     train_set = DatasetFromHdf5('data/train.h5')
     training_data_loader = DataLoader(dataset=train_set, num_workers=opt.threads, batch_size=opt.batchSize, shuffle=True)
@@ -63,7 +63,7 @@ def main():
             model.load_state_dict(checkpoint["model"].state_dict())
         else:
             print("=> no checkpoint found at '{}'".format(opt.resume))
-            
+
     print("===> Setting Optimizer")
     optimizer = optim.SGD([
                 {"params": model.module.features.parameters()},
@@ -84,7 +84,7 @@ def total_gradient(parameters):
         totalnorm += modulenorm ** 2
     totalnorm = totalnorm ** (1./2)
     return totalnorm
-    
+
 def adjust_learning_rate(optimizer, epoch):
     """Sets the learning rate to the initial LR decayed by 10 every 10 epochs"""
     lr = opt.lr * (0.1 ** (epoch // opt.step))
@@ -97,8 +97,8 @@ def train(training_data_loader, optimizer, model, criterion, epoch):
     for param_group in optimizer.param_groups:
         param_group['lr'] = lr  
 
-    print 'epoch =', epoch,'lr =',optimizer.param_groups[0]['lr']
-    
+    print("Epoch={}, lr={}".format(epoch, optimizer.param_groups[0]["lr"]))
+
     model.train()
 
     for iteration, batch in enumerate(training_data_loader, 1):
@@ -108,11 +108,11 @@ def train(training_data_loader, optimizer, model, criterion, epoch):
         if opt.cuda:
             input = input.cuda()
             target = target.cuda()            
-        
+
         loss = criterion(model(input), target) 
-        
+
         optimizer.zero_grad()
-        
+
         loss.backward()
 
         nn.utils.clip_grad_norm(model.parameters(),opt.clip) 
@@ -121,8 +121,8 @@ def train(training_data_loader, optimizer, model, criterion, epoch):
         
         if iteration%100 == 0:
             print("===> Epoch[{}]({}/{}): Loss: {:.10f}".format(epoch, iteration, len(training_data_loader), loss.data[0]))            
-            print "total gradient", total_gradient(model.parameters())
-            
+            print("Total gradient: {}".format(total_gradient(model.parameters()))
+
 def test(testing_data_loader, model, criterion):
     avg_psnr = 0
     for batch in testing_data_loader:
