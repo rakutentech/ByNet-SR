@@ -121,7 +121,7 @@ def train(training_data_loader, optimizer, model, criterion, epoch):
         
         if iteration%100 == 0:
             print("===> Epoch[{}]({}/{}): Loss: {:.10f}".format(epoch, iteration, len(training_data_loader), loss.data[0]))            
-            print("Total gradient: {}".format(total_gradient(model.parameters()))
+            print("Total gradient: {}".format(total_gradient(model.parameters())))
 
 def test(testing_data_loader, model, criterion):
     avg_psnr = 0
