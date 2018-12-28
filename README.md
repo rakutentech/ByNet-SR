@@ -1,6 +1,6 @@
 # PyTorch ByNet
 Implementation of ICIP2017 Paper: ["ByNet-SR: Image Super Resolution with a Bypass Connection Network
-"](http://www.jiuxu.org/wp-content/uploads/2017/09/ICIP2017_JiuXU.pdf) in PyTorch
+"](http://bjornstenger.github.io/papers/xu_icip2017.pdf) in PyTorch
 
 ### Citation
 
